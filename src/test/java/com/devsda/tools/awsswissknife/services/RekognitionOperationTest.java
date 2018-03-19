@@ -44,7 +44,7 @@ public class RekognitionOperationTest {
     public void detectLablesTestWithBytes() throws Exception {
 
         Map<String, Float> lablelsConfidenceMap = rekognitionOperation.detectLabels(
-                amazonRekognition, "/Users/hijhamb/Downloads/mdl_party.jpg", 40F);
+                amazonRekognition, /*"/Users/hijhamb/Downloads/mdl_party.jpg"*/"/Users/hijhamb/Desktop/android_app.png", 40F);
 
         System.out.println(lablelsConfidenceMap);
 
