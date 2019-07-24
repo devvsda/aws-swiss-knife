@@ -23,7 +23,7 @@ public class S3Operation {
 
         AWSCredentials credentials;
         try {
-            credentials = new BasicAWSCredentials("AKIAIDAWUI5NWKEONSJA", "lwWFtVk5aR0km8eSrBTqNoRYIFavU1bqAVqLmrR1");
+            credentials = new BasicAWSCredentials("AKIA54ANOPPACPD7A67G", "YbRFSUudIzO63736lThuRGc/9CujQBK1YIPnHbxK");
             //credentials = new ProfileCredentialsProvider("default").getCredentials();
         } catch(Exception e) {
             throw new AmazonClientException("Cannot load the credentials from the credential profiles file. "
