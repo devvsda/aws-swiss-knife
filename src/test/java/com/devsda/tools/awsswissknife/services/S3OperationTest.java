@@ -5,6 +5,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.List;
+
 public class S3OperationTest {
 
     private static S3Operation s3Operation;
@@ -19,5 +21,11 @@ public class S3OperationTest {
     @Test
     public void uploadTest() {
         s3Operation.upload(amazonS3, "/Users/hijhamb/Downloads/mdl_party.jpg", "hitesh-dev-testing", "api_testing.jpg");
+    }
+
+    @Test
+    public void listObjects() {
+        List<String> objects = s3Operation.listObjects(amazonS3, "ehsaas-directory");
+        System.out.println(objects);
     }
 }

@@ -22,7 +22,8 @@ public class RekognitionOperation {
 
         AWSCredentials credentials;
         try {
-            credentials = new ProfileCredentialsProvider("default").getCredentials();
+            //credentials = new ProfileCredentialsProvider("default").getCredentials();
+            credentials = new BasicAWSCredentials("AKIAIDAWUI5NWKEONSJA", "lwWFtVk5aR0km8eSrBTqNoRYIFavU1bqAVqLmrR1");
         } catch(Exception e) {
             throw new AmazonClientException("Cannot load the credentials from the credential profiles file. "
                     + "Please make sure that your credentials file is at the correct "
@@ -95,5 +96,35 @@ public class RekognitionOperation {
         }
 
         return relevantLabels;
+    }
+
+    public Float findOutSimilarFaces(AmazonRekognition amazonRekognition, String sourceBucketName, String sourceImageLocation, String targetBucketName, String targetImageLocation) {
+
+        CompareFacesRequest compareFacesRequest = new CompareFacesRequest();
+
+        compareFacesRequest.withSourceImage(new Image().
+                withS3Object(
+                        new S3Object()
+                                .withBucket(sourceBucketName)
+                                .withName(sourceImageLocation)))
+                .withTargetImage(new Image()
+                        .withS3Object(
+                                new S3Object()
+                                        .withBucket(targetBucketName)
+                                        .withName(targetImageLocation)))
+                .withSimilarityThreshold(90.0F);
+
+
+        CompareFacesResult compareFacesResult = amazonRekognition.compareFaces(compareFacesRequest);
+
+        List<CompareFacesMatch> compareFacesMatches = compareFacesResult.getFaceMatches();
+
+        if(compareFacesMatches == null || compareFacesMatches.isEmpty()) {
+            return null;
+        }
+
+        return compareFacesMatches.get(0).getSimilarity();
+
+
     }
 }

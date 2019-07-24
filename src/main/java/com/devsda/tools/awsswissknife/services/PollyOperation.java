@@ -1,6 +1,13 @@
 package com.devsda.tools.awsswissknife.services;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.regions.RegionUtils;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.polly.AmazonPolly;
+import com.amazonaws.services.polly.AmazonPollyClient;
 import com.amazonaws.services.polly.AmazonPollyClientBuilder;
 import com.amazonaws.services.polly.model.*;
 import com.devsda.tools.awsswissknife.exceptions.PollyInternalException;
@@ -15,16 +22,34 @@ public class PollyOperation {
 
     private static final Logger log = LoggerFactory.getLogger(PollyOperation.class);
 
-    private AmazonPolly createPollyClient() {
-        AmazonPolly client = AmazonPollyClientBuilder.defaultClient();
-        return client;
+    private AmazonPolly createPollyClient(Regions region) {
+        // AmazonPolly client = AmazonPollyClientBuilder.defaultClient();
+
+        AWSCredentials credentials;
+        try {
+            //credentials = new ProfileCredentialsProvider("default").getCredentials();
+            credentials = new BasicAWSCredentials("AKIAIDAWUI5NWKEONSJA", "lwWFtVk5aR0km8eSrBTqNoRYIFavU1bqAVqLmrR1");
+        } catch(Exception e) {
+            throw new AmazonClientException("Cannot load the credentials from the credential profiles file. "
+                    + "Please make sure that your credentials file is at the correct "
+                    + "location (/Users/userid/.aws/credentials), and is in a valid format.",
+                    e);
+        }
+
+
+        //AmazonPolly amazonPolly = AmazonPollyClientBuilder.defaul tClient();
+
+        AmazonPolly amazonPolly = new AmazonPollyClient(credentials);
+        amazonPolly.setRegion(RegionUtils.getRegion(region.getName()));
+
+        return amazonPolly;
     }
 
     public void convertToSpeech(String locationToStoreMp3File, String textToReadOut) {
 
         log.info(String.format("Converting text : %s into speech supported mp3 file", textToReadOut));
 
-        AmazonPolly client = createPollyClient();
+        AmazonPolly client = createPollyClient(Regions.US_EAST_1);
 
         SynthesizeSpeechRequest synthesizeSpeechRequest = new SynthesizeSpeechRequest()
                 .withOutputFormat(OutputFormat.Mp3)

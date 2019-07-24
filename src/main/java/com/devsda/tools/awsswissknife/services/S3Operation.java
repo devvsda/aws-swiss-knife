@@ -3,14 +3,19 @@ package com.devsda.tools.awsswissknife.services;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.RegionUtils;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class S3Operation {
 
@@ -18,7 +23,8 @@ public class S3Operation {
 
         AWSCredentials credentials;
         try {
-            credentials = new ProfileCredentialsProvider("default").getCredentials();
+            credentials = new BasicAWSCredentials("AKIAIDAWUI5NWKEONSJA", "lwWFtVk5aR0km8eSrBTqNoRYIFavU1bqAVqLmrR1");
+            //credentials = new ProfileCredentialsProvider("default").getCredentials();
         } catch(Exception e) {
             throw new AmazonClientException("Cannot load the credentials from the credential profiles file. "
                     + "Please make sure that your credentials file is at the correct "
@@ -58,6 +64,20 @@ public class S3Operation {
                     "such as not being able to access the network.");
             System.out.println("Error Message: " + ace.getMessage());
         }
+    }
+
+    public List<String> listObjects(AmazonS3 s3Client, String bucketName) {
+
+        ObjectListing objectListing = s3Client.listObjects(bucketName);
+
+        List<String> objects = new ArrayList<>();
+
+        for(S3ObjectSummary s3ObjectSummary : objectListing.getObjectSummaries()) {
+            objects.add(s3ObjectSummary.getKey());
+        }
+
+        return objects;
+
     }
 
 }
